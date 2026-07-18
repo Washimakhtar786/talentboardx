@@ -1,18 +1,77 @@
+import { JobCreateSchema, JobUpdateSchema } from '../dtos/job.dto.js';
 import * as jobService from '../services/jobService.js';
 
 export const createJob = async (req, res, next) => {
   try {
-    const job = await jobService.createJob(req.body);
-    res.status(201).json(job);
+    const jobData = JobCreateSchema.parse(req.body);
+
+    const createdJob = await jobService.createJob(jobData);
+
+    res.status(201).json({
+      success: true,
+      data: createdJob,
+    });
   } catch (error) {
     next(error);
   }
 };
 
-export const getJobs = async (req, res, next) => {
+export const getAllJobs = async (req, res, next) => {
   try {
     const jobs = await jobService.getJobs(req.query);
-    res.status(200).json(jobs);
+
+    res.status(200).json({
+      success: true,
+      data: jobs,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getJobById = async (req, res, next) => {
+  try {
+    const job = await jobService.getJobById(req.params.id);
+
+    if (!job) {
+      return res.status(404).json({
+        success: false,
+        message: 'Job not found',
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: job,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateJob = async (req, res, next) => {
+  try {
+    const updateData = JobUpdateSchema.parse(req.body);
+
+    const updatedJob = await jobService.updateJob(
+      req.params.id,
+      updateData
+    );
+
+    res.status(200).json({
+      success: true,
+      data: updatedJob,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteJob = async (req, res, next) => {
+  try {
+    await jobService.deleteJob(req.params.id);
+
+    res.status(204).send();
   } catch (error) {
     next(error);
   }

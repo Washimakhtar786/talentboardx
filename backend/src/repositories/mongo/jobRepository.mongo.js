@@ -6,8 +6,8 @@ const mongoJobRepository = {
   },
 
   async getJobById(id) {
-    return await Job.findById(id).populate('postedBy', 'name email');
-  },
+  return await Job.findById(id);
+},
 
   async getAllJobs(filters = {}) {
     const query = {};
