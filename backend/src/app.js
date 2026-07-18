@@ -1,18 +1,15 @@
 import express from 'express';
-import cors from 'cors';
-import helmet from 'helmet';
-import dotenv from 'dotenv';
-
 import routes from './routes/index.js';
-
-dotenv.config();
+import { errorHandler } from './middlewares/errorHandler.js';
 
 const app = express();
 
 app.use(express.json());
-app.use(cors());
-app.use(helmet());
 
+// Routes
 app.use('/api/v1', routes);
+
+// Error Handler (Always Last)
+app.use(errorHandler);
 
 export default app;
