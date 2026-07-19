@@ -19,6 +19,20 @@ API.interceptors.request.use((config) => {
   return config;
 });
 
+API.interceptors.response.use(
+  (response) => response,
+
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem("auth-storage");
+
+      window.location.href = "/login?expired=true";
+    }
+
+    return Promise.reject(error);
+  }
+);
+
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
