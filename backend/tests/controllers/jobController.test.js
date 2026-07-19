@@ -1,21 +1,21 @@
-import { jest, describe, it, expect, afterEach } from '@jest/globals';
+import { jest, describe, it, expect, afterEach } from "@jest/globals";
 
 // Mock service BEFORE importing controller
 const mockGetJobById = jest.fn();
 
-jest.unstable_mockModule('../../src/services/jobService.js', () => ({
+jest.unstable_mockModule("../../src/services/jobService.js", () => ({
   getJobById: mockGetJobById,
 }));
 
 // Import controller AFTER mock
 const { getJobById } = await import(
-  '../../src/controllers/jobController.js'
+  "../../src/controllers/jobController.js"
 );
 
-describe('Job Controller - getJobById', () => {
+describe("Job Controller - getJobById", () => {
   const mockReq = {
     params: {
-      id: '123',
+      id: "123",
     },
   };
 
@@ -30,17 +30,17 @@ describe('Job Controller - getJobById', () => {
     jest.clearAllMocks();
   });
 
-  it('should return 200 and job data if found', async () => {
+  it("should return 200 and job data if found", async () => {
     const mockJob = {
-      id: '123',
-      title: 'React Developer',
+      id: "123",
+      title: "React Developer",
     };
 
     mockGetJobById.mockResolvedValue(mockJob);
 
     await getJobById(mockReq, mockRes, mockNext);
 
-    expect(mockGetJobById).toHaveBeenCalledWith('123');
+    expect(mockGetJobById).toHaveBeenCalledWith("123");
 
     expect(mockRes.status).toHaveBeenCalledWith(200);
 
@@ -50,34 +50,36 @@ describe('Job Controller - getJobById', () => {
     });
   });
 
-  it('should return 404 if job is not found', async () => {
-  mockGetJobById.mockResolvedValue(null);
+  it("should call next with 404 error if job is not found", async () => {
+    const error = new Error("Job not found");
+    error.status = 404;
 
-  await getJobById(mockReq, mockRes, mockNext);
+    mockGetJobById.mockRejectedValue(error);
 
-  expect(mockGetJobById).toHaveBeenCalledWith('123');
+    await getJobById(mockReq, mockRes, mockNext);
 
-  expect(mockRes.status).toHaveBeenCalledWith(404);
+    expect(mockGetJobById).toHaveBeenCalledWith("123");
 
-  expect(mockRes.json).toHaveBeenCalledWith({
-    success: false,
-    message: 'Job not found',
+    expect(mockNext).toHaveBeenCalledWith(error);
+
+    expect(mockRes.status).not.toHaveBeenCalled();
+
+    expect(mockRes.json).not.toHaveBeenCalled();
   });
-});
 
-it('should call next with error if service throws', async () => {
-  const mockError = new Error('Database Error');
+  it("should call next with error if service throws", async () => {
+    const mockError = new Error("Database Error");
 
-  mockGetJobById.mockRejectedValue(mockError);
+    mockGetJobById.mockRejectedValue(mockError);
 
-  await getJobById(mockReq, mockRes, mockNext);
+    await getJobById(mockReq, mockRes, mockNext);
 
-  expect(mockGetJobById).toHaveBeenCalledWith('123');
+    expect(mockGetJobById).toHaveBeenCalledWith("123");
 
-  expect(mockNext).toHaveBeenCalledWith(mockError);
+    expect(mockNext).toHaveBeenCalledWith(mockError);
 
-  expect(mockRes.status).not.toHaveBeenCalled();
+    expect(mockRes.status).not.toHaveBeenCalled();
 
-  expect(mockRes.json).not.toHaveBeenCalled();
-});
+    expect(mockRes.json).not.toHaveBeenCalled();
+  });
 });

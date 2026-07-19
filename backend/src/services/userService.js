@@ -1,7 +1,9 @@
 import { userRepository } from '../repositories/index.js';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-
+import {
+  hashPassword,
+  comparePassword,
+  generateToken,
+} from "./authService.js";
 export const signup = async (data) => {
   const existing = await userRepository.findUserByEmail(data.email);
 
@@ -9,7 +11,7 @@ export const signup = async (data) => {
     throw new Error('User already exists');
   }
 
-  const hashedPassword = await bcrypt.hash(data.password, 10);
+  const hashedPassword = await hashPassword(data.password);
 
   const user = await userRepository.createUser({
     ...data,
@@ -31,24 +33,13 @@ export const login = async ({ email, password }) => {
     throw new Error('Invalid credentials');
   }
 
-  const valid = await bcrypt.compare(password, user.password);
+  const valid = await comparePassword(password, user.password);
 
   if (!valid) {
     throw new Error('Invalid credentials');
   }
 
-  const token = jwt.sign(
-    {
-      id: user.id,
-      role: user.role,
-    },
-    process.env.JWT_SECRET,
-    {
-      expiresIn: '1d',
-    }
-  );
-
-  return token;
+  return generateToken(user);
 };
 
 export const getUserById = async (id) => {

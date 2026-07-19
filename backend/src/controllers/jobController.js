@@ -33,13 +33,6 @@ export const getJobById = async (req, res, next) => {
   try {
     const job = await jobService.getJobById(req.params.id);
 
-    if (!job) {
-      return res.status(404).json({
-        success: false,
-        message: 'Job not found',
-      });
-    }
-
     res.status(200).json({
       success: true,
       data: job,
