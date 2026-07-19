@@ -49,6 +49,15 @@ const pgJobRepo = {
     return await job.update(updateData);
   },
 
+  async getJobsByEmployer(postedBy) {
+  return await Job.findAll({
+    where: {
+      postedBy,
+    },
+    order: [["createdAt", "DESC"]],
+  });
+},
+
   async deleteJob(id) {
     const job = await Job.findByPk(id);
 

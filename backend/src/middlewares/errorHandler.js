@@ -1,19 +1,19 @@
-import { logError } from '../utils/logger.js';
+import { logError } from "../utils/logger.js";
 
 export const errorHandler = (err, req, res, next) => {
   logError(err);
 
   const status = err.status || 500;
-  const message = err.message || 'Something went wrong';
+  const message = err.message || "Something went wrong";
 
-  if (err.name === 'ZodError') {
+  if (err.name === "ZodError") {
     const issues = err.issues || err.errors || [];
 
     return res.status(400).json({
       success: false,
-      message: 'Validation error',
+      message: "Validation error",
       errors: issues.map((e) => ({
-        path: e.path.join('.'),
+        path: e.path.join("."),
         message: e.message,
       })),
     });

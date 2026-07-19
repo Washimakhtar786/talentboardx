@@ -1,20 +1,21 @@
+import Application from "../../models/postgres/application.model.js";
+
 const pgApplicationRepository = {
-  async createApplication() {
-    throw new Error(
-      'PostgreSQL Application Repository not implemented yet'
-    );
+  async createApplication(applicationData) {
+    return await Application.create(applicationData);
   },
 
-  async findByUser() {
-    throw new Error(
-      'PostgreSQL Application Repository not implemented yet'
-    );
+  async findByUser(userId) {
+    return await Application.findAll({
+      where: {
+        userId,
+      },
+      order: [["createdAt", "DESC"]],
+    });
   },
 
-  async findById() {
-    throw new Error(
-      'PostgreSQL Application Repository not implemented yet'
-    );
+  async findById(id) {
+    return await Application.findByPk(id);
   },
 };
 

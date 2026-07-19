@@ -3,7 +3,7 @@ import { persist } from "zustand/middleware";
 
 export const useAuthStore = create(
   persist(
-    (set) => ({
+    (set, get) => ({
       user: null,
       token: null,
       role: null,
@@ -21,6 +21,10 @@ export const useAuthStore = create(
           token: null,
           role: null,
         }),
+
+      checkAuth: () => {
+        return !!get().token;
+      },
     }),
     {
       name: "auth-storage",

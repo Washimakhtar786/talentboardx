@@ -20,12 +20,12 @@ export const login = async (req, res, next) => {
   try {
     const credentials = LoginSchema.parse(req.body);
 
-    const token = await userService.login(credentials);
+    const result = await userService.login(credentials);
 
-    res.status(200).json({
-      success: true,
-      token,
-    });
+res.status(200).json({
+  success: true,
+  data: result,
+});
   } catch (error) {
     next(error);
   }

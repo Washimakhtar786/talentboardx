@@ -1,8 +1,15 @@
+import "dotenv/config";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const EXPIRES_IN = "1d";
+
+
+
+if (!JWT_SECRET) {
+  throw new Error("JWT_SECRET is not defined in environment variables");
+}
 
 // Hash Password
 export const hashPassword = async (plainPassword) => {
