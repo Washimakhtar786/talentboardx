@@ -1,4 +1,4 @@
-import User from '../../models/mongo/user.model.js';
+import User from "../../models/mongo/user.model.js";
 
 const mongoUserRepository = {
   async createUser(userData) {
@@ -11,6 +11,18 @@ const mongoUserRepository = {
 
   async findUserById(id) {
     return await User.findById(id);
+  },
+
+  async updatePassword(userId, hashedPassword) {
+    return await User.findByIdAndUpdate(
+      userId,
+      {
+        password: hashedPassword,
+      },
+      {
+        new: true,
+      }
+    );
   },
 };
 
