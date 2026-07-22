@@ -1,0 +1,12 @@
+[
+  {
+    "title": "MERN Developer",
+    "description": "Looking for an experienced MERN developer.",
+    "location": "Lucknow",
+    "jobType": "Full-Time",
+    "company": "TalentBoardX",
+    "postedBy": 1,
+    "isActive": true,
+    "skills": ["React", "Node.js"]
+  }
+]

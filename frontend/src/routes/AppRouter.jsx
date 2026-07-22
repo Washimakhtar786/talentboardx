@@ -5,6 +5,7 @@ import JobListPage from "../pages/Jobseeker/JobListPage";
 import Dashboard from "../pages/Dashboard";
 import ProtectedRoute from "../components/ProtectedRoute";
 import SignupPage from "../pages/Auth/SignupPage";
+import MatchDashboard from "../pages/MatchDashboard";
 
 const AppRouter = () => {
   return (
@@ -13,6 +14,7 @@ const AppRouter = () => {
         <Route path="/" element={<JobListPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/match-dashboard" element={<MatchDashboard />} />
 
         <Route
           path="/dashboard"

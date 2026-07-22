@@ -1,13 +1,8 @@
-import { Op } from 'sequelize';
-import Job from '../../models/postgres/job.model.js';
+import Job from "../../models/postgres/job.model.js";
 
-const pgJobRepo = {
-  async createJob(data) {
-    return await Job.create(data);
-  },
-
-  async getJobById(id) {
-    return await Job.findByPk(id);
+const pgJobRepository = {
+  async createJob(jobData) {
+    return await Job.create(jobData);
   },
 
   async getAllJobs(filters = {}) {
@@ -21,54 +16,38 @@ const pgJobRepo = {
       where.jobType = filters.jobType;
     }
 
-    if (filters.skills) {
-      where.skills = {
-        [Op.overlap]: filters.skills,
-      };
+    if (filters.company) {
+      where.company = filters.company;
     }
 
-    if (filters.search) {
-      where.title = {
-        [Op.iLike]: `%${filters.search}%`,
-      };
+    if (typeof filters.isActive !== "undefined") {
+      where.isActive = filters.isActive;
     }
 
-    return await Job.findAll({
-      where,
-      order: [['createdAt', 'DESC']],
+    return await Job.findAll({ where });
+  },
+
+  async getJobById(id) {
+    return await Job.findByPk(id);
+  },
+
+  async updateJob(jobId, updateData) {
+    await Job.update(updateData, {
+      where: {
+        id: jobId,
+      },
     });
+
+    return await Job.findByPk(jobId);
   },
 
-  async updateJob(id, updateData) {
-    const job = await Job.findByPk(id);
-
-    if (!job) {
-      return null;
-    }
-
-    return await job.update(updateData);
-  },
-
-  async getJobsByEmployer(postedBy) {
-  return await Job.findAll({
-    where: {
-      postedBy,
-    },
-    order: [["createdAt", "DESC"]],
-  });
-},
-
-  async deleteJob(id) {
-    const job = await Job.findByPk(id);
-
-    if (!job) {
-      return null;
-    }
-
-    await job.destroy();
-
-    return true;
+  async deleteJob(jobId) {
+    return await Job.destroy({
+      where: {
+        id: jobId,
+      },
+    });
   },
 };
 
-export default pgJobRepo;
+export default pgJobRepository;

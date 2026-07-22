@@ -10,12 +10,34 @@ const pgApplicationRepository = {
       where: {
         userId,
       },
-      order: [["createdAt", "DESC"]],
     });
   },
 
   async findById(id) {
     return await Application.findByPk(id);
+  },
+
+  async getApplicationsByJob(jobId) {
+    return await Application.findAll({
+      where: {
+        jobId,
+      },
+    });
+  },
+
+  async updateApplicationStatus(applicationId, status) {
+    await Application.update(
+      {
+        status,
+      },
+      {
+        where: {
+          id: applicationId,
+        },
+      }
+    );
+
+    return await Application.findByPk(applicationId);
   },
 };
 
