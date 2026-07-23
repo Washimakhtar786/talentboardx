@@ -1,0 +1,84 @@
+version: "3.9"
+
+services:
+
+  backend:
+    build: ./backend
+    container_name: talentboardx-backend
+
+    ports:
+      - "4000:4000"
+
+    env_file:
+      - ./backend/.env
+
+    depends_on:
+      - mongo
+      - postgres
+      - ai
+
+    volumes:
+      - ./backend:/app
+
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    container_name: talentboardx-frontend
+
+    ports:
+      - "8080:80"
+
+    depends_on:
+      - backend
+
+    restart: unless-stopped
+
+  ai:
+    build: ./ai-microservice
+    container_name: talentboardx-ai
+
+    ports:
+      - "8000:8000"
+
+    env_file:
+      - ./ai-microservice/.env
+
+    volumes:
+      - ./ai-microservice:/app
+
+    restart: unless-stopped
+
+  mongo:
+    image: mongo:latest
+    container_name: talentboardx-mongo
+
+    ports:
+      - "27017:27017"
+
+    volumes:
+      - mongo-data:/data/db
+
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:17
+    container_name: talentboardx-postgres
+
+    ports:
+      - "5432:5432"
+
+    environment:
+      POSTGRES_DB: talentboardx
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Talent@123
+
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+
+    restart: unless-stopped
+
+
+volumes:
+  mongo-data:
+  pg-data:
