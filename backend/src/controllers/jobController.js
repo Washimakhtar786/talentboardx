@@ -5,7 +5,10 @@ export const createJob = async (req, res, next) => {
   try {
     const jobData = JobCreateSchema.parse(req.body);
 
-    const createdJob = await jobService.createJob(jobData);
+    const createdJob = await jobService.createJob({
+      ...jobData,
+      postedBy: req.user.id,
+    });
 
     res.status(201).json({
       success: true,

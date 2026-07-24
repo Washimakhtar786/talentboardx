@@ -1,4 +1,4 @@
-import express from 'express';
+import express from "express";
 
 import {
   createJob,
@@ -6,18 +6,50 @@ import {
   getJobById,
   updateJob,
   deleteJob,
-} from '../controllers/jobController.js';
+} from "../controllers/jobController.js";
+
+import {
+  authenticate,
+  authorize,
+} from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-router.post('/', createJob);
+/* ===========================
+   Public Routes
+=========================== */
 
-router.get('/', getAllJobs);
+router.get("/", getAllJobs);
 
-router.get('/:id', getJobById);
+router.get("/:id", getJobById);
 
-router.put('/:id', updateJob);
+/* ===========================
+   Employer Routes
+=========================== */
 
-router.delete('/:id', deleteJob);
+router.post(
+  "/",
+  authenticate,
+  authorize("employer", "admin"),
+  createJob
+);
+
+router.put(
+  "/:id",
+  authenticate,
+  authorize("employer", "admin"),
+  updateJob
+);
+
+/* ===========================
+   Admin Only
+=========================== */
+
+router.delete(
+  "/:id",
+  authenticate,
+  authorize("admin"),
+  deleteJob
+);
 
 export default router;

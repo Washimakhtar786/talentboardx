@@ -3,6 +3,11 @@ import logger from "../utils/logger.js";
 export const errorHandler = (err, req, res, next) => {
   logger.error(err);
 
+
+  console.error("===== ERROR =====");
+console.error(err);
+console.error(err.stack);
+
   const status = err.status || 500;
   const message = err.message || "Something went wrong";
 

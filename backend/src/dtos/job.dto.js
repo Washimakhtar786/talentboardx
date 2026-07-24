@@ -8,10 +8,7 @@ export const JobCreateSchema = z.object({
   company: z.string(),
 
   // Accept both PostgreSQL (number) and MongoDB (ObjectId string)
-  postedBy: z.union([
-    z.number().int().positive(),
-    z.string().min(24).max(24),
-  ]),
+  
 
   skills: z.array(z.string()).optional(),
 });
