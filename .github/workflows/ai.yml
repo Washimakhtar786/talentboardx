@@ -1,0 +1,33 @@
+name: CI - AI Microservice
+
+on:
+  push:
+    paths:
+      - 'ai-microservice/**'
+
+  pull_request:
+    paths:
+      - 'ai-microservice/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          cd ai-microservice
+          pip install -r requirements.txt
+
+      #- name: Run tests
+      #  run: |
+       #   cd ai-microservice
+       #   pytest
