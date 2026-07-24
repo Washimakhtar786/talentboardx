@@ -48,7 +48,7 @@ router.put(
 router.delete(
   "/:id",
   authenticate,
-  authorize("admin"),
+  authorize("employer","admin"),
   deleteJob
 );
 

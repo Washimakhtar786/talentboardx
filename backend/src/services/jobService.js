@@ -23,22 +23,42 @@ export const getJobById = async (id) => {
 };
 
 // Update Job
-export const updateJob = async (id, data) => {
+export const updateJob = async (id, data, currentUser) => {
   const job = await jobRepository.getJobById(id);
 
   if (!job) {
     throw createError("Job not found", 404);
   }
 
+  // Admin can update any job
+  if (currentUser.role !== "admin") {
+    if (job.postedBy.toString() !== currentUser.id) {
+      throw createError(
+        "You can only update your own jobs",
+        403
+      );
+    }
+  }
+
   return await jobRepository.updateJob(id, data);
 };
 
 // Delete Job
-export const deleteJob = async (id) => {
+export const deleteJob = async (id, currentUser) => {
   const job = await jobRepository.getJobById(id);
 
   if (!job) {
     throw createError("Job not found", 404);
+  }
+
+  // Admin can delete any job
+  if (currentUser.role !== "admin") {
+    if (job.postedBy.toString() !== currentUser.id) {
+      throw createError(
+        "You can only delete your own jobs",
+        403
+      );
+    }
   }
 
   return await jobRepository.deleteJob(id);

@@ -50,9 +50,10 @@ export const updateJob = async (req, res, next) => {
     const updateData = JobUpdateSchema.parse(req.body);
 
     const updatedJob = await jobService.updateJob(
-      req.params.id,
-      updateData
-    );
+  req.params.id,
+  updateData,
+  req.user
+);
 
     res.status(200).json({
       success: true,
@@ -65,7 +66,10 @@ export const updateJob = async (req, res, next) => {
 
 export const deleteJob = async (req, res, next) => {
   try {
-    await jobService.deleteJob(req.params.id);
+    await jobService.deleteJob(
+  req.params.id,
+  req.user
+);
 
     res.status(204).send();
   } catch (error) {
