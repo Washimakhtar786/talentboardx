@@ -26,6 +26,16 @@ const userSchema = new mongoose.Schema(
       enum: ['jobseeker', 'employer', 'admin'],
       default: 'jobseeker',
     },
+
+    resumeUrl: {
+  type: String,
+  default: "",
+},
+
+resumePublicId: {
+  type: String,
+  default: "",
+},
   },
   {
     timestamps: true,

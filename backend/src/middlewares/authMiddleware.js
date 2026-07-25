@@ -12,6 +12,8 @@ export const authenticate = (req, res, next) => {
   try {
     const decoded = verifyToken(token);
 
+    console.log("Decoded Token:", decoded);
+
     req.user = decoded;
 
     next();

@@ -1,5 +1,6 @@
 import { Readable } from "stream";
 import cloudinary from "../config/cloudinary.js";
+import User from "../models/mongo/user.model.js";
 
 export const uploadResume = async (file, user) => {
   if (!file) {
@@ -12,17 +13,27 @@ export const uploadResume = async (file, user) => {
         folder: "TalentBoardX/resumes",
         resource_type: "raw",
       },
-      (error, result) => {
-        if (error) {
-          return reject(error);
-        }
+      async (error, result) => {
+        try {
+          if (error) {
+            return reject(error);
+          }
 
-        resolve({
-          filename: file.originalname,
-          uploadedBy: user.id,
-          resumeUrl: result.secure_url,
-          publicId: result.public_id,
-        });
+          // Save resume details in MongoDB
+          await User.findByIdAndUpdate(user.id, {
+            resumeUrl: result.secure_url,
+            resumePublicId: result.public_id,
+          });
+
+          resolve({
+            filename: file.originalname,
+            uploadedBy: user.id,
+            resumeUrl: result.secure_url,
+            publicId: result.public_id,
+          });
+        } catch (err) {
+          reject(err);
+        }
       }
     );
 
