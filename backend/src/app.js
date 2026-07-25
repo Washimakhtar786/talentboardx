@@ -8,6 +8,7 @@ import limiter from "./middlewares/rateLimiter.js";
 
 import routes from "./routes/index.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
+import resumeRoutes from "./routes/resumeRoutes.js";
 
 const app = express();
 
@@ -25,6 +26,8 @@ const allowedOrigins = [
   "http://localhost:5173", // React Dev Server
   process.env.FRONTEND_URL, // Production Frontend
 ].filter(Boolean);
+
+
 
 app.use(
   cors({
@@ -76,6 +79,8 @@ app.use(
 =========================== */
 
 app.use("/api/v1", limiter);
+
+app.use("/api/v1/resume", resumeRoutes);
 
 /* ===========================
    Root Health Check

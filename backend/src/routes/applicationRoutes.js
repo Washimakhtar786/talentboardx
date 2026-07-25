@@ -7,7 +7,7 @@ import {
 } from '../controllers/applicationController.js';
 
 import { authenticate } from '../middlewares/authMiddleware.js';
-import { upload } from '../middlewares/uploadMiddleware.js';
+import upload from '../middlewares/uploadMiddleware.js';
 
 const router = express.Router();
 
